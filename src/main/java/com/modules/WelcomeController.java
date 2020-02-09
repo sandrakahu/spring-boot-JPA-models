@@ -1,6 +1,6 @@
-package com.mkyong;
+package com.modules;
 
-import com.mkyong.model.Module;
+import com.modules.model.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Map;
+import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Controller
 public class WelcomeController {
@@ -19,14 +20,25 @@ public class WelcomeController {
     private ModuleService moduleService;
 
     @RequestMapping("/")
-    public String welcome(Map<String, Object> model) {
-        Module module = new Module();
-        module.setName("First Module");
-        module.setType(1);
-        moduleService.saveModule(module);
-        model.put("modules", moduleService.getAllModules());
+    public String welcome(Model model) {
+
+        List<Module> allModules = moduleService.getParentModules();
+        if (allModules.size() == 0) {
+            Module module = new Module();
+            module.setName("First Module");
+            module.setType(1);
+            moduleService.saveModule(module);
+            allModules = moduleService.getParentModules();
+        }
+        model.addAttribute("modules", allModules);
         return "welcome";
     }
+
+    @RequestMapping("/home")
+    public String redirect() {
+        return "redirect:/";
+    }
+
 
     @RequestMapping("/edit/{id}")
     public ModelAndView showEditModulePage(@PathVariable(name = "id") Long id) {
@@ -37,17 +49,27 @@ public class WelcomeController {
     }
 
     @RequestMapping(value = "/add/parentId={id}")
-    public String addNewChildModule(Model model, @PathVariable Long id) {
+    public String addNewChildModule(Model model,
+                                    @PathVariable Long id) {
+
+        final Module parentModule = moduleService.get(id);
+        try {
+            if (parentModule.getType() == 3) {
+                return "redirect:/";
+            }
+        } catch (EntityNotFoundException e) {
+            return "redirect:/";
+        }
+
         Module module = new Module();
         module.setParentId(id);
+        module.setType(parentModule.getType() + 1);
         model.addAttribute("module", module);
-		System.out.println(module);
         return "addModule";
     }
 
     @RequestMapping(value = "/add/parentId={id}", method = RequestMethod.POST)
     public String saveNewChildModule(@ModelAttribute("module") Module module) {
-        System.out.println(module);
         moduleService.saveModule(module);
         return "redirect:/";
     }
@@ -55,7 +77,6 @@ public class WelcomeController {
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
     public String saveModuleInfo(@ModelAttribute("module") Module module) {
-        System.out.println(module);
         moduleService.saveModule(module);
         return "redirect:/";
     }
@@ -70,7 +91,6 @@ public class WelcomeController {
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public String saveModule(@ModelAttribute("module") Module module) {
-        System.out.println(module);
         moduleService.saveModule(module);
         return "redirect:/";
     }

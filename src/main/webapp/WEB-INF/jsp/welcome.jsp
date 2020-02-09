@@ -12,7 +12,6 @@
 	<spring:url value="/css/main.css" var="springCss" />
 	<link href="${springCss}" rel="stylesheet" />
 	 -->
-    <c:url value="/css/main.css" var="jstlCss"/>
     <link href="${jstlCss}" rel="stylesheet"/>
     <style>
         #modules {
@@ -41,29 +40,6 @@
             background-color: #4CAF50;
             color: white;
         }
-        .button {
-            background-color: #4CAF50; /* Green */
-            border: none;
-            color: white;
-            padding: 16px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            transition-duration: 0.4s;
-            cursor: pointer;
-        }
-        .button1 {
-            background-color: white;
-            color: black;
-            border: 2px solid #4CAF50;
-        }
-
-        .button1:hover {
-            background-color: #4CAF50;
-            color: white;
-        }
     </style>
 </head>
 <body>
@@ -73,19 +49,13 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Modules application</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">All modules</a></li>
-                <li><a href="#editModule">Table view</a></li>
-            </ul>
-        </div>
     </div>
 </nav>
 
 <div class="container">
 
     <div class="starter-template">
-        <h2>${message}</h2>
+        <h2>Hierarchical structure called Module using Spring Boot and JPA</h2>
 
         <a href="/new">Add new first level module</a>
 
@@ -95,7 +65,7 @@
                 <th>Module ID</th>
                 <th>Name</th>
                 <th>Type</th>
-                <th>ParentId</th>
+                <th>Parent ID</th>
             </tr>
             </thead>
             <c:forEach items="${modules}" var="module">
@@ -105,10 +75,33 @@
                     <td><c:out value="${module.type}"/></td>
                     <td><c:out value="${module.parentId}"/></td>
                     <td>
-                        <a href="/edit/${module.id}">Edit</a>
-                        <a href="/add/parentId=<c:out value="${module.id}"/>">Add new child module</a>
+                        <a href="/edit/${module.id}">Change name</a> ||
+                        <a href="/add/parentId=${module.id}">Add new child module</a>
                     </td>
                 </tr>
+                <c:forEach items="${module.subModules}" var="child">
+                    <tr >
+                        <td><c:out value="${child.id}"/></td>
+                        <td><c:out value="${child.name}"/></td>
+                        <td><c:out value="${child.type}"/></td>
+                        <td><c:out value="${child.parentId}"/></td>
+                        <td>
+                            <a href="/edit/${child.id}">Change name</a> ||
+                            <a href="/add/parentId=${child.id}">Add new child module</a>
+                        </td>
+                    </tr>
+                    <c:forEach items="${child.subModules}" var="secondChild">
+                        <tr >
+                            <td><c:out value="${secondChild.id}"/></td>
+                            <td><c:out value="${secondChild.name}"/></td>
+                            <td><c:out value="${secondChild.type}"/></td>
+                            <td><c:out value="${secondChild.parentId}"/></td>
+                            <td>
+                                <a href="/edit/${secondChild.id}">Change name</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </c:forEach>
             </c:forEach>
         </table>
 

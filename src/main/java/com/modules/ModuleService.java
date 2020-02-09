@@ -1,7 +1,7 @@
-package com.mkyong;
+package com.modules;
 
-import com.mkyong.model.Module;
-import com.mkyong.repository.ModuleJpaRepository;
+import com.modules.model.Module;
+import com.modules.repository.ModuleJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +23,10 @@ public class ModuleService {
 
     public Module get(Long id) {
         return repository.getOne(id);
+    }
+
+    public List<Module> getParentModules(){
+        return repository.findByParentIdIsNull();
     }
 
 }
