@@ -15,10 +15,6 @@ public class ModuleService {
         this.repository = repository;
     }
 
-    public List<Module> getAllModules(){
-        return repository.findAll();
-    }
-
     public Module saveModule(Module module){
         return repository.save(module);
     }

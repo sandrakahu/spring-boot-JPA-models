@@ -8,7 +8,6 @@ import java.util.List;
 
 @Component
 public interface ModuleJpaRepository extends JpaRepository<Module, Long> {
-    Module findByName(String name);
     List<Module> findByParentIdIsNull();
 }
 
