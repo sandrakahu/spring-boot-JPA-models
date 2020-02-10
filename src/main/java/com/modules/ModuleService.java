@@ -2,7 +2,6 @@ package com.modules;
 
 import com.modules.model.Module;
 import com.modules.repository.ModuleJpaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,8 +9,11 @@ import java.util.List;
 @Service
 public class ModuleService {
 
-    @Autowired
-    private ModuleJpaRepository repository;
+    private final ModuleJpaRepository repository;
+
+    public ModuleService(ModuleJpaRepository repository) {
+        this.repository = repository;
+    }
 
     public List<Module> getAllModules(){
         return repository.findAll();

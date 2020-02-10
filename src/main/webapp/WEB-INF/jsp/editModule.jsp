@@ -13,6 +13,34 @@
 	<link href="${springCss}" rel="stylesheet" />
 	 -->
     <link href="${jstlCss}" rel="stylesheet"/>
+    <style>
+        #modules {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #modules td, #modules th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #modules tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #modules tr:hover {
+            background-color: #ddd;
+        }
+
+        #modules th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
 </head>
 <body>
 
@@ -23,7 +51,7 @@
         </div>
     </div>
 </nav>
-<div align="center">
+<div align="center" id="modules">
     <h1>Edit Module</h1>
     <br/>
     <form action="#" th:object="${module}"

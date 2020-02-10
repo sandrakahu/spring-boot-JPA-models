@@ -1,7 +1,6 @@
 package com.modules;
 
 import com.modules.model.Module;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,8 +15,11 @@ import java.util.List;
 @Controller
 public class WelcomeController {
 
-    @Autowired
-    private ModuleService moduleService;
+    private final ModuleService moduleService;
+
+    public WelcomeController( final ModuleService moduleService) {
+        this.moduleService = moduleService;
+    }
 
     @RequestMapping("/")
     public String welcome(Model model) {
